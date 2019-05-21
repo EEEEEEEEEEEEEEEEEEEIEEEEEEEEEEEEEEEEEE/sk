@@ -1,0 +1,124 @@
+@import "mixins/mixins";
+@import "common/var";
+
+@include b(listpage){
+  width: 100%;
+  height: 100%;
+  @include e(main){
+    width: 100%;
+    height: 85%;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  @media only screen and (max-width: 768px) {
+    @include e(main){
+      height: 80%;
+    }
+  }
+}
+
+@include b(listpage-listitem){
+  font-size: 1.25rem;
+  width: 90%;
+  margin-left: 5%;
+  height: 5rem;
+  background: #FFFFFF;
+  box-shadow: 0 1px 2px 0 #EEF2F3;
+  border-radius: 6px;
+  margin-top: 2rem;
+  display: flex;
+  align-items: center;
+  user-select: none;
+  @include e(device-logo){
+    margin-left: 3rem;
+    margin-right: 1rem;
+  }
+  @include e(playState){
+    border: 1px solid #D4D4D4;
+    border-radius: 1rem;
+    color: #333333;
+    padding: 0.5rem 1.5rem;
+  }
+
+  @include e(wifi-signal){
+    width: 1em; height: 1em;
+    vertical-align: -0.15em;
+    fill: currentColor;
+    overflow: hidden;
+  }
+
+  @include e(battery){
+    @include when(full){
+      color: #00916B;
+    }
+    @include when(enough){
+      color: #C78C00;
+    }
+    @include when(nearEmpty){
+      color: #AA0000;
+    }
+    @include when(Empty){
+      color: #96B4C8;
+    }
+  }
+
+  @media only screen and (max-width: 768px) {
+    height: 3rem;
+    margin-top: 1rem;
+    font-size: 1rem;
+
+    @include e(device-logo){
+      margin-left: 1rem;
+      margin-right: 0.5rem;
+    }
+    @include e(playState){
+      border: 1px solid #D4D4D4;
+      border-radius: 1rem;
+      color: #333333;
+      padding: 0.2rem 0.5rem;
+      font-size: 1rem;
+    }
+  }
+}
+
+@include b(listpage-footer){
+  text-align: center;
+  height: 15%;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  @include e(button){
+    width: 40%;
+    height: 70%;
+    background: #464E62;
+    border-radius: 6px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #CBD4EA;
+    cursor: pointer;
+    &:hover{
+      opacity: 0.7;
+    }
+  }
+
+  @include e(buttonIcon){
+    font-size: 1.6rem;
+    margin-right: 0.5rem;
+  }
+
+  @media only screen and (max-width: 768px) {
+    height: 20%;
+    @include e(button){
+      font-size: 1rem;
+    }
+    @include e(buttonIcon){
+      font-size: 1.2rem;
+      margin-right: 0.5rem;
+    }
+  }
+}
