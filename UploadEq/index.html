@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<title>工厂工具录入系统</title>
-	<link rel="stylesheet" href="public/layui/css/layui.css">
+	<link rel="stylesheet" href="../public/layui/css/layui.css">
 	<style>
 		.upeq .layui-input-inline {
 			width: 60%;
@@ -55,10 +55,9 @@
 						<legend>设备信息烧录</legend>
 						<div class="layui-field-box">
 							你可以设置设备型号 ，获取一条可用的设备信息
-
 						</div>
+					</fieldset>
 				</div>
-				</fieldset>
 				<form class="layui-form upeq" action="" style="margin-top: 50px">
 					<div class="layui-form-item">
 						<label class="layui-form-label">设备型号</label>
@@ -88,16 +87,17 @@
 					<div class="layui-form-item">
 						<label class="layui-form-label">WIFI地址</label>
 						<div class="layui-input-inline">
-							<input type="text" name="wifimacaddress" maxlength="12" lay-verify="wifimacaddress" autocomplete="off"
-								placeholder="请输入WIFI地址" class="layui-input wifimacaddress">
+							<input type="text" name="wifimacaddress" maxlength="12" lay-verify="wifimacaddress"
+								autocomplete="off" placeholder="请输入WIFI地址" class="layui-input wifimacaddress">
 						</div>
 						<span class="types"></span>
 					</div>
 					<div class="layui-form-item">
 						<label class="layui-form-label">蓝牙地址</label>
 						<div class="layui-input-inline">
-							<input type="text" name="bluetoothmacaddress"  maxlength="12" lay-verify="bluetoothmacaddress"
-								autocomplete="off" placeholder="请输入蓝牙地址" class="layui-input bluetoothmacaddress">
+							<input type="text" name="bluetoothmacaddress" maxlength="12"
+								lay-verify="bluetoothmacaddress" autocomplete="off" placeholder="请输入蓝牙地址"
+								class="layui-input bluetoothmacaddress">
 						</div>
 						<span class="types"></span>
 					</div>
@@ -113,24 +113,23 @@
 			</div>
 		</div>
 	</div>
-	<script src="public/js/jquery.js"></script>
-	<script src="public/layui/layui.all.js"></script>
+	<script src="../public/js/jquery.js"></script>
+	<script src="../public/layui/layui.all.js"></script>
 	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 	<script>
-		var eqId;
+		var eqId = null;
 		var devicemodelid, layer = layui.layer;
-		axios.get('http://localhost:8088/api/factory/devicemodel')
-			.then(function (response) {
+		var hostpath = "192.168.1.104:8088"
+		$.ajax({
+			url: "http://" + hostpath + "/api/factory/devicemodel",
+			success: function (response) {
 				$("#devicemodelid").html(" ")
-				var htmls = `
-               <option value="null">请选择</option>
-           `
+				var htmls = "<option value='undefined'>请选择</option>"
 				$("#devicemodelid").append(htmls)
-				eqId = response.data.Data;
+				console.log(response)
+				eqId = response.Data;
 				for (var a = 0; a < eqId.length; a++) {
-					var htmls = `
-               <option value="${eqId[a].Id}">${eqId[a].Name}</option>
-           `
+					var htmls = "<option value=" + eqId[a].Id + ">" + eqId[a].Name + "</option>"
 					console.log(htmls)
 					$("#devicemodelid").append(htmls)
 				}
@@ -140,25 +139,25 @@
 					form.render('select'); //刷新select选择框渲染
 					//各种基于事件的操作，下面会有进一步介绍
 				});
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
+			}
+		})
 		$(".pullnewInfo").click(function () {
+			var time = new Date().getTime()
 			if (devicemodelid == undefined) {
 				layer.msg("需要设置设备型号ID才能获取一个有用的设备信息")
 			} else {
-				axios.get('http://localhost:8088/api/factory/hardwareinfo', {
-					params: {
-						devicemodelid: devicemodelid
-					}
-				})
-					.then(function (response) {
-						console.log(response)
-						var code = response.data.Code;
-						var data = response.data.Data;
+				$.ajax({
+					url: "http://" + hostpath + "/api/factory/hardwareinfo",
+					data: {
+						devicemodelid: devicemodelid,
+						time: time
+					},
+					success: function (response) {
+
+						var code = response.Code;
+						var data = response.Data;
 						if (code !== 0) {
-							layer.msg(response.data.Message)
+							layer.msg(response.Message)
 						} else {
 							console.log(data)
 							$(".ordernumber").val(data.OrderNumber);
@@ -166,11 +165,9 @@
 							$(".wifimacaddress").val(data.WifiMacAddress)
 							$(".bluetoothmacaddress").val(data.BluetoothMacAddress)
 						}
+					}
+				})
 
-					})
-					.catch(function (error) {
-						console.log(error);
-					});
 			}
 		})
 		//JavaScript代码区域
@@ -195,10 +192,20 @@
 			var editIndex = layedit.build('LAY_demo_editor');
 			form.verify({
 				serialnumber: function (value) {
-					var verifynum = value.slice(17, 22);
-					if (value.length !== 22) {
-						return '请输入正确的序列号，序列号应该为22位';
+					if (devicemodelid == undefined) {
+						layer.msg("请选择设备型号")
 					}
+					if (devicemodelid == 1) {
+						var verifynum = value.slice(17, 22);
+						if (value.length !== 22) {
+							return '请输入正确的序列号，标准版序列号应该为22位';
+						} 
+					} else {
+						if (value.length !== 15) {
+							return '请输入正确的序列号，电信版序列号应该为22位';
+						} 
+					}
+
 				},
 				wifimacaddress: function (value) {
 					if (value.length < 12) {
@@ -217,17 +224,17 @@
 			//监听提交
 			form.on('submit(demo1)', function (data) {
 				console.log(data)
-				var urls = 'http://localhost:8088/api/factory/device';
+				var urls = "http://" + hostpath + "/api/factory/device";
 				var data = data.field;
 				postAjax(urls, data)
 				return false;
 			});
 			form.on('select(devicemodelid)', function (data) {
 				devicemodelid = data.value;
-				if(devicemodelid==1){
-					$(".serialnumber").attr("maxlength","22")
-				}else if(devicemodelid==2){
-					$(".serialnumber").attr("maxlength","15")
+				if (devicemodelid == 1) {
+					$(".serialnumber").attr("maxlength", "22")
+				} else if (devicemodelid == 2) {
+					$(".serialnumber").attr("maxlength", "15")
 				}
 			});
 		});
@@ -249,13 +256,11 @@
 					}
 					if (Code == 0) {
 						layer.close(ii);
-						layer.msg('添加成功');
-						$(".serialnumber").val("").focus();
+						layer.msg('烧录成功');
+						$(".serialnumber").val("");
 						$(".wifimacaddress").val("");
 						$(".bluetoothmacaddress").val("");
-						
 					}
-
 				},
 				error: function () {
 
@@ -288,7 +293,7 @@
 		// 验证类型
 		var verifyInfo = {
 			serialnumber: function (value, dom) {
-				if(devicemodelid==undefined){
+				if (devicemodelid == undefined) {
 					layer.msg("请选择设备型号")
 				}
 				if (devicemodelid == 1) {
@@ -319,7 +324,7 @@
 				}
 			},
 			bluetoothmacaddress: function (value, dom) {
-				if (value.length !==12) {
+				if (value.length !== 12) {
 					return '请输入正确的蓝牙地址，蓝牙地址应该为12位';
 				}
 				else {
@@ -329,14 +334,10 @@
 		}
 		function careat(type, dom) {
 			if (type == true) {
-				var htmls = `
-				<i class="layui-icon layui-icon-face-smile active"></i>
-				`
+				var htmls = '<i class="layui-icon layui-icon-face-smile active"></i>'
 				$(dom).parent().next("span").html(htmls)
 			} else {
-				var htmls = `
-					<i class="layui-icon layui-icon-face-cry"></i> ${type}
-				`
+				var htmls = '<i class="layui-icon layui-icon-face-cry"></i>' + type
 				$(dom).parent().next("span").html(htmls)
 			}
 		}

@@ -26,6 +26,7 @@
             font-size: 25px;
             color: #FF5722;
             vertical-align: middle;
+            margin-right: 10px;
         }
 
         .types i.active {
@@ -60,8 +61,9 @@
                         <div class="layui-field-box">
                             根据你的清单添加硬件信息，录入正确的内容
                         </div>
+
+                    </fieldset>
                 </div>
-                </fieldset>
 
                 <form class="layui-form upeq" action="" style="margin-top: 50px">
                     <div class="layui-form-item">
@@ -83,7 +85,7 @@
                         <div class="layui-input-inline">
                             <input type="text" name="snbegin" data-text="serialnumber" data-input="1"
                                 lay-verify="serialnumber" autocomplete="off" placeholder="请输入序列号开始"
-                                class="layui-input snbegin input1">
+                                class="layui-input snbegin input1 serialnumber">
                         </div>
                         <span class="types"></span>
                     </div>
@@ -92,49 +94,49 @@
                         <div class="layui-input-inline">
                             <input type="text" name="snend" data-text="serialnumber" data-input="2"
                                 lay-verify="serialnumber" autocomplete="off" placeholder="请输入序列号终止"
-                                class="layui-input snend input2">
+                                class="layui-input snend input2 serialnumber">
                         </div>
                         <span class="types"></span>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">WIFI地址开始</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="wifibegin" data-text="wifimacaddress" data-input="3"
+                            <input type="text" name="wifibegin" maxlength="12" data-text="wifimacaddress" data-input="3"
                                 lay-verify="wifimacaddress" autocomplete="off" placeholder="请输入WIFI地址开始"
-                                class="layui-input wifibegin input3">
+                                class="layui-input wifibegin input3 wifimacaddress">
                         </div>
                         <span class="types"></span>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">WIFI地址终止</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="wifiend" data-text="wifimacaddress" data-input="4"
+                            <input type="text" name="wifiend" maxlength="12" data-text="wifimacaddress" data-input="4"
                                 lay-verify="wifimacaddress" autocomplete="off" placeholder="请输入WIFI地址终止"
-                                class="layui-input wifiend input4">
+                                class="layui-input wifiend input4 wifimacaddress">
                         </div>
                         <span class="types"></span>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">蓝牙地址开始</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="btbegin" data-text="bluetoothmacaddress" data-input="5"
-                                lay-verify="bluetoothmacaddress" autocomplete="off" placeholder="请输入蓝牙地址开始"
-                                class="layui-input btbegin input5">
+                            <input type="text" name="btbegin" maxlength="12" data-text="bluetoothmacaddress"
+                                data-input="5" lay-verify="bluetoothmacaddress" autocomplete="off"
+                                placeholder="请输入蓝牙地址开始" class="layui-input btbegin input5 bluetoothmacaddress">
                         </div>
                         <span class="types"></span>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">蓝牙地址终止</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="btend" data-text="bluetoothmacaddress" data-input="6"
-                                lay-verify="bluetoothmacaddress" autocomplete="off" placeholder="请输入蓝牙地址终止"
-                                class="layui-input btend input6">
+                            <input type="text" name="btend" maxlength="12" data-text="bluetoothmacaddress"
+                                data-input="6" lay-verify="bluetoothmacaddress" autocomplete="off"
+                                placeholder="请输入蓝牙地址终止" class="layui-input btend input6 bluetoothmacaddress">
                         </div>
                         <span class="types"></span>
                     </div>
                     <div class="layui-form-item">
                         <div class="layui-input-block">
-                            <button class="layui-btn" lay-submit="" lay-filter="demo1">立即录入</button>
+                            <button class="layui-btn" lay-submit="" maxlength="12" lay-filter="demo1">立即录入</button>
                             <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                         </div>
                     </div>
@@ -147,20 +149,22 @@
     <script src="./public/layui/layui.all.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
-        var eqId;
-        var devicemodelid, layer = layui.layer;;
-        axios.get('http://localhost:8088/api/factory/devicemodel')
-            .then(function (response) {
+        var eqId = null;
+        var devicemodelid = null, layer = layui.layer;
+        var time = new Date().getTime()
+        $.ajax({
+            url: "http://192.168.1.104:8088/api/factory/devicemodel",
+            data: {
+                time: time
+            },
+            success: function (response) {
                 $("#devicemodelid").html(" ")
-                var htmls = `
-               <option value="null">请选择</option>
-           `
+                var htmls = "<option value='undefined'>请选择</option>"
                 $("#devicemodelid").append(htmls)
-                eqId = response.data.Data;
+                console.log(response)
+                eqId = response.Data;
                 for (var a = 0; a < eqId.length; a++) {
-                    var htmls = `
-               <option value="${eqId[a].Id}">${eqId[a].Name}</option>
-           `
+                    var htmls = "<option value=" + eqId[a].Id + ">" + eqId[a].Name + "</option>"
                     console.log(htmls)
                     $("#devicemodelid").append(htmls)
                 }
@@ -170,10 +174,8 @@
                     form.render('select'); //刷新select选择框渲染
                     //各种基于事件的操作，下面会有进一步介绍
                 });
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+            }
+        })
         //JavaScript代码区域
         layui.use('element', function () {
             var element = layui.element;
@@ -196,10 +198,18 @@
             var editIndex = layedit.build('LAY_demo_editor');
             form.verify({
                 serialnumber: function (value) {
-                    var verifynum = value.slice(17, 22);
-                    console.log(verifynum)
-                    if (value.length !== 22) {
-                        return '请输入正确的序列号，序列号应该为22位';
+                    if (devicemodelid == undefined) {
+                        layer.msg("请选择设备型号")
+                    }
+                    if (devicemodelid == 1) {
+                        var verifynum = value.slice(17, 22);
+                        if (value.length !== 22) {
+                            return '请输入正确的序列号，标准版序列号应该为22位';
+                        }
+                    } else {
+                        if (value.length !== 15) {
+                            return '请输入正确的序列号，电信版序列号应该为22位';
+                        }
                     }
                 },
                 wifimacaddress: function (value) {
@@ -225,7 +235,7 @@
             //监听提交
             form.on('submit(demo1)', function (data) {
                 console.log(data)
-                var urls = 'http://localhost:8088/api/factory/hardwareinfo';
+                var urls = 'http://192.168.1.104:8088/api/factory/hardwareinfo';
                 var data = data.field;
                 console.log(data)
                 postAjax(urls, data)
@@ -233,6 +243,17 @@
             });
             form.on('select(devicemodelid)', function (data) {
                 devicemodelid = data.value;
+                if (devicemodelid == 1) {
+                    $(".snbegin").attr("maxlength", "22")
+                    $(".snend").attr("maxlength", "22")
+                } else if (devicemodelid == 2) {
+                    $(".snbegin").attr("maxlength", "15")
+                    $(".snend").attr("maxlength", "15")
+                }
+                $(".serialnumber").val("");
+                $(".wifimacaddress").val("");
+                $(".bluetoothmacaddress").val("");
+
             });
         });
         function postAjax(urls, data) {
@@ -247,18 +268,14 @@
                     console.log(red)
                     var Code = red.Code;
                     var ii = layer.load();
-                    if (Code == -3) {
+                    if (Code !== 0) {
                         layer.close(ii);
-                        layer.msg('当前设备已经存在,请重新录入');
+                        layer.msg("错误");
                     }
                     if (Code == 0) {
                         layer.close(ii);
-                        layer.msg('添加成功');
+                        layer.msg('添加成功，添加条数：' + red.Data.total);
                     }
-                    setTimeout(function () {
-                        
-                    }, 2000)
-
                 },
                 error: function () {
                     layer.msg('添加失败');
@@ -270,7 +287,7 @@
         $(".upeq").on("input", "input", function (e) {
             if (e.keyCode !== 8) {
                 if (devicemodelid == undefined) {
-                    layer.msg("请旋转设备型号")
+                    layer.msg("请选择设备型号")
                 }
                 var mark = this.name, value = this.value, dom = this;
                 verifyfun(mark, value, dom)
@@ -315,12 +332,14 @@
                     } else {
                         return true
                     }
-                } else {
+                } else if (devicemodelid == 2) {
                     if (value.length !== 15) {
-                        return '请输入正确的序列号，电信版序列号应该为22位';
+                        return '请输入正确的序列号，电信版序列号应该为15位';
                     } else {
                         return true
                     }
+                }else{
+                    return '请选择设备';
                 }
 
             },
@@ -348,16 +367,12 @@
         function careat(type, dom) {
 
             if (type == true) {
-                var htmls = `
-           <i class="layui-icon layui-icon-face-smile active"></i>
-          `
+                var htmls = '<i class="layui-icon layui-icon-face-smile active"></i>'
                 $(dom).parent().next("span").html(htmls)
                 var inputid = parseInt($(dom).data('input')) + 1;
                 $(".input" + inputid).focus()
             } else {
-                var htmls = `
-           <i class="layui-icon layui-icon-face-cry"></i> ${type}
-          `
+                var htmls = '<i class="layui-icon layui-icon-face-cry"></i>' + type
                 $(dom).parent().next("span").html(htmls)
             }
         }
