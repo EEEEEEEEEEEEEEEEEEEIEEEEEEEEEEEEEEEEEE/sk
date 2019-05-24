@@ -149,11 +149,12 @@
     <script src="./public/layui/layui.all.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
+        var hostpath = "localhost:8088"
         var eqId = null;
         var devicemodelid = null, layer = layui.layer;
         var time = new Date().getTime()
         $.ajax({
-            url: "http://192.168.1.104:8088/api/factory/devicemodel",
+            url: "http://" + hostpath + "/api/factory/devicemodel",
             data: {
                 time: time
             },
@@ -235,7 +236,7 @@
             //监听提交
             form.on('submit(demo1)', function (data) {
                 console.log(data)
-                var urls = 'http://192.168.1.104:8088/api/factory/hardwareinfo';
+                var urls = "http://"+hostpath+"/api/factory/hardwareinfo";
                 var data = data.field;
                 console.log(data)
                 postAjax(urls, data)
@@ -338,7 +339,7 @@
                     } else {
                         return true
                     }
-                }else{
+                } else {
                     return '请选择设备';
                 }
 
