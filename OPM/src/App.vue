@@ -40,6 +40,7 @@
           text-color="#fff"
           active-text-color="#ffd04b"
           :collapse="isCollapse"
+          @select="handleSelect"
         >
           <el-submenu index="1">
             <template slot="title">
@@ -47,20 +48,21 @@
               <span>应用管理</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="1-2">签名管理</el-menu-item>
-            </el-menu-item-group>
-            <el-menu-item-group>
-              <el-menu-item index="1-3">选项3</el-menu-item>
+              <el-menu-item index="/" >签名管理</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
-          <el-menu-item index="2">
-            <i class="el-icon-menu"></i>
-            <span slot="title">导航二</span>
-          </el-menu-item>
-          <el-menu-item index="3">
-            <i class="el-icon-setting"></i>
-            <span slot="title">导航三</span>
-          </el-menu-item>
+         <el-submenu index="2">
+            <template slot="title">
+              <i class="el-icon-edit"></i>
+              <span>用户管理</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="/omp-userlist" class="userlist">用户列表</el-menu-item>
+            </el-menu-item-group>
+             <el-menu-item-group>
+              <el-menu-item index="/opma-dduser" class="addlist">用户添加</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
         </el-menu>
       </el-col>
       <el-col :span="21" class="mainCont">
@@ -75,7 +77,8 @@ export default {
   data() {
     return {
       isCollapse: false,
-      navtypesrc: "../static/image/navleft.png"
+      navtypesrc: "../static/image/navleft.png",
+      activeIndex:1
     };
   },
   methods: {
@@ -108,6 +111,10 @@ export default {
 
         });*/
     }
+    ,handleSelect(key, keyPath) {
+        console.log(key, keyPath);
+        this.$router.push(key);
+      }
   }
 };
 </script>
@@ -149,7 +156,7 @@ body,
   width: 100%;
 }
 .mainCont {
-  background: #eeeeee;
+  background: #dddddd;
   min-height: 500px;
 }
 .el-menu-vertical-demo:not(.el-menu--collapse) {
@@ -168,6 +175,9 @@ body,
 }
 .el-menu--collapse {
   min-height: 500px;
+}
+.el-submenu .el-menu-item{
+  min-width: auto;
 }
 .el-row {
   height: 100%;

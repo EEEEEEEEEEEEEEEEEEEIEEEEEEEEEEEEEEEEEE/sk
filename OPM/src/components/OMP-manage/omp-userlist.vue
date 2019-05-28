@@ -9,23 +9,27 @@
                 <el-input v-model="form.nameid"></el-input>
               </el-form-item>
             </el-col>
-
             <el-col :span="4">
               <el-button type="primary" @click="onserach">查询</el-button>
               <el-button>重置</el-button>
             </el-col>
+            <el-col :span="4" :push="2">
+              <el-button type="primary" @click="adduser()" style="float:lfet">添加用户</el-button>
+            </el-col>
           </el-row>
         </el-form>
-        <el-row class="tableCont mainContdiv">
+        <el-row class="tableCont mainContdiv" :span="11" style="width:60%;">
           <el-table :data="tableData" stripe style="width: 100%">
             <el-table-column prop="nameid" label="用户ID" width="180"></el-table-column>
-            <el-table-column prop="ompid" label="应用ID " width="180"></el-table-column>
-            <el-table-column prop="ompname" label="应用名称"></el-table-column>
-            <el-table-column prop="ompntype" label="签名状态"></el-table-column>
-            <el-table-column prop="omptime" label="上次变更时间"></el-table-column>
-            <el-table-column label="Apk下载" width="180">
+            <el-table-column prop="omptime" label="注册时间"></el-table-column>
+            <el-table-column label="操作日志" width="180">
               <template slot-scope="scope">
-                <el-button size="primary" @click="handlelink(scope)">下载</el-button>
+                <el-button size="primary" @click="handlelink(scope)">详情</el-button>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" width="180">
+              <template slot-scope="scope">
+                <el-button size="primary" @click="handlelinks(scope)">编辑</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -89,25 +93,26 @@ export default {
   methods: {
     onserach() {
       var newData = [];
-      var name = this.form.nameid,
-        ompid = this.form.ompid,
-        ompname = this.form.ompname;
+      var name = this.form.nameid;
       for (var a = 0; a < this.tablelist.length; a++) {
         console.log(this.tablelist[a].nameid.indexOf(name));
-        console.log(this.tablelist[a].ompid.indexOf(ompid));
-        console.log(this.tablelist[a].ompname.indexOf(ompname));
         if (this.tablelist[a].nameid.indexOf(name) !== -1) {
-          if (this.tablelist[a].ompid.indexOf(ompid) !== -1) {
-            if (this.tablelist[a].ompname.indexOf(ompname) !== -1) {
-              newData.push(this.tablelist[a]);
-            }
-          }
+          newData.push(this.tablelist[a]);
         }
       }
       this.tableData = newData;
     },
     handlelink(value) {
-      console.log(value);
+      var nameid = value.row.nameid;
+      var opmid= value.row.ompid
+      var info={
+        nameid:nameid,
+        opmid:opmid
+      }
+      this.$router.push({path: '/opma-userinfo', query: {info: info}})
+    },
+    adduser() {
+      this.$router.push("/opma-dduser");
     }
   }
 };
