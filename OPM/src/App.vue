@@ -32,7 +32,7 @@
     <el-row class="tac">
       <el-col :span="3">
         <el-menu
-          default-active="1-2"
+          default-active="/"
           class="el-menu-vertical-demo"
           @open="handleOpen"
           @close="handleClose"

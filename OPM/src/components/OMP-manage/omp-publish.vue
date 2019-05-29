@@ -9,6 +9,20 @@
                 <el-input v-model="form.nameid"></el-input>
               </el-form-item>
             </el-col>
+            <el-col :span="4">
+              <el-form-item label="应用ID">
+                <el-input v-model="form.ompid"></el-input>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="5">
+              <el-form-item label="应用名称">
+                <el-select v-model="form.ompname" placeholder="请选择应用名称">
+                  <el-option label="上海市" value="上海市"></el-option>
+                  <el-option label="上海市" value="上海市"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
 
             <el-col :span="4">
               <el-button type="primary" @click="onserach">查询</el-button>
