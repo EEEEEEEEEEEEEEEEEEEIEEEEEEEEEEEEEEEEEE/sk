@@ -36,18 +36,19 @@ const router = new Router({
   ]
 })
 
-// router.beforeEach((to, from, next) => {
-//   let userInfo=localStorage.getItem('userInfo');
-//   if(userInfo!=null){
-//     if(Date.now()-JSON.parse(userInfo).loginTime<=3600*1000){
-//       next({path:to.path=='/login'?'/video-center':null});
-//     }else {
-//       localStorage.removeItem('userInfo');
-//       next({path:to.path=='/login'?null:'/login'});
-//     }
-//   }else {
-//     next({path:to.path=='/login'?null:'/login'});
-//   }
-// });
+router.beforeEach((to, from, next) => {
+  let userInfo=localStorage.getItem('userInfo');
+  if(userInfo!=null){
+    console.log(Date.now()-JSON.parse(userInfo).loginTime)
+    if(Date.now()-JSON.parse(userInfo).loginTime<=3600*10000){
+      next({path:to.path=='/login'?'/video-center':null});
+    }else {
+      localStorage.removeItem('userInfo');
+      next({path:to.path=='/login'?null:'/login'});
+    }
+  }else {
+    next({path:to.path=='/login'?null:'/login'});
+  }
+});
 
 export default router;

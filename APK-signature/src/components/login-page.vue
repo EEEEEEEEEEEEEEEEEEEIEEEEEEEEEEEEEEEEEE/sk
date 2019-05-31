@@ -50,6 +50,7 @@
         captchaData: "",
         isValidating: false,
         aptchaId:"",
+        hostip:"192.168.1.116:8081"
       }
     },
     created() {
@@ -107,10 +108,12 @@
         formData.set("captchaid",parm.captchaid)
         await this.axios.post('/api/opm/login', formData,{headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).then((res) => {
           this.isValidating = false;
+          console.log(res.data);
           if (res.data.Code == 0) {
             console.log(res.data)
             let userInfo = {
               Name:this.formData.name,
+
               loginTime:Date.now()
             }
             localStorage.setItem('userInfo', JSON.stringify(userInfo));
@@ -126,7 +129,6 @@
       },
       flushCaptcha() {
         this.axios.get('/api/opm/getcaptcha').then((res) => {
-          console.log(res)
           this.captchaData = res.data.Data.Url;
           this.aptchaId=res.data.Data.Id;
         });

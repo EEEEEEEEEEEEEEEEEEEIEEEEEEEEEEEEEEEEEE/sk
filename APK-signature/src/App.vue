@@ -3,20 +3,20 @@
     <!--
       导航头部+log
     -->
-    <el-header>
+    <el-header style="background-color: #23262e;">
       <el-row :span="3">
         <el-col class="logcontMain" :span="3">
-          <el-col class="grid-content bg-purple-dark logcont">Logo</el-col>
+          <el-col class="grid-content bg-purple-dark logcont">SkyworthVr</el-col>
         </el-col>
         <el-col :span="3"></el-col>
         <el-col :span="4" :push="15">
           <div class="grid-content heaimg bg-purple-light">
-            <el-col :span="4" :push="5" style=" font-size:24px;vertical-align: sub">
+            <el-col :span="4" :push="5" style=" font-size:24px;vertical-align: sub;color:#009688">
               <i class="el-icon-bell"></i>
             </el-col>
             <el-col :span="4"></el-col>
             <el-col :span="4" :push="5">
-              <el-dropdown trigger="click" @command="handleCommand">
+              <el-dropdown @command="handleCommand">
                 <span class="el-dropdown-link">
                   <img src="../static/image/headimg.png" alt>
                 </span>
@@ -44,22 +44,14 @@
         >
           <el-submenu index="1">
             <template slot="title">
-              <i class="el-icon-news"></i>
-              <span>应用管理</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="/">签名管理</el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
-          <el-submenu index="2">
-            <template slot="title">
               <i class="el-icon-document"></i>
-              <span>用户管理</span>
+              <span>APK签名</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/omp-userlist" class="userlist">用户列表</el-menu-item>
+              <el-menu-item index="/">APK签名录入</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
+          
         </el-menu>
       </el-col>
       <el-col :span="21" class="mainCont">
@@ -75,8 +67,7 @@ export default {
     return {
       isCollapse: false,
       navtypesrc: "../static/image/navleft.png",
-      activeIndex: 1,
-      showpage: 0
+      activeIndex: 1
     };
   },
   methods: {
@@ -103,15 +94,8 @@ export default {
         });*/
     },
     handleCommand(command) {
-      this.axios
-        .get("/api/opm/user/logout")
-        .then(res => {
-          localStorage.removeItem("userInfo");
-          this.$router.push("/login");
-        })
-        .catch(err => {
-          console.error(err);
-        });
+      localStorage.removeItem("userInfo");
+      this.$router.push("/login");
       /*this.axios.get('/ssnwtweb/api/admins/logout').then((res)=>{
 
         });*/
@@ -153,12 +137,14 @@ body,
   padding: 0;
 }
 .logcont {
-  background: #00284d;
-  height: 60px;
-  line-height: 60px;
-  text-align: center;
-  color: #fff;
-  width: 100%;
+    background: #23262E;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+    color: #fff;
+    width: 100%;
+    color: #009688;
+    font-size: 27px;
 }
 .mainCont {
   background: #dddddd;

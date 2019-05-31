@@ -10,18 +10,18 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
+      '/api': {
+        target: 'http://192.168.1.200:8087/',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': '/api',
+        }
+      },
       '/apkfile':{
         target: 'http://192.168.1.200:8087/',
         changeOrigin: true,
         pathRewrite: {
           '^/apkfile': '/apkfile',
-        }
-      },
-      '/api':{
-        target: 'http://192.168.1.200:8087/',
-        changeOrigin: true,
-        pathRewrite: {
-          '^/api': '/api',
         }
       },
     },
