@@ -87,7 +87,7 @@
             this.isValidating = true;
             this.validatePass();
           } else {
-            console.log('error submit!!');
+             //console.log('error submit!!');
             return false;
           }
         });
@@ -95,7 +95,7 @@
       async validatePass() {
         var formData=new FormData();
         this.formData.aptchaId=this.aptchaId;
-        console.log(this.formData);
+         //console.log(this.formData);
         var parm={
           name: this.formData.name,
           password:this.formData.password,
@@ -108,9 +108,9 @@
         formData.set("captchaid",parm.captchaid)
         await this.axios.post('/api/opm/login', formData,{headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).then((res) => {
           this.isValidating = false;
-          console.log(res.data);
+           //console.log(res.data);
           if (res.data.Code == 0) {
-            console.log(res.data)
+             //console.log(res.data)
             let userInfo = {
               Name:this.formData.name,
 

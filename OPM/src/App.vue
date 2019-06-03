@@ -3,20 +3,20 @@
     <!--
       导航头部+log
     -->
-    <el-header>
+    <el-header style="background-color: #23262e;height:61px;">
       <el-row :span="3">
         <el-col class="logcontMain" :span="3">
-          <el-col class="grid-content bg-purple-dark logcont">Logo</el-col>
+          <el-col class="grid-content bg-purple-dark logcont">O P M</el-col>
         </el-col>
         <el-col :span="3"></el-col>
         <el-col :span="4" :push="15">
           <div class="grid-content heaimg bg-purple-light">
-            <el-col :span="4" :push="5" style=" font-size:24px;vertical-align: sub">
+            <el-col :span="4" :push="5" style=" font-size:24px;vertical-align: sub;color:#009688">
               <i class="el-icon-bell"></i>
             </el-col>
             <el-col :span="4"></el-col>
             <el-col :span="4" :push="5">
-              <el-dropdown trigger="click" @command="handleCommand">
+              <el-dropdown @command="handleCommand">
                 <span class="el-dropdown-link">
                   <img src="../static/image/headimg.png" alt>
                 </span>
@@ -142,62 +142,64 @@ div {
   width: 100%;
   height: 100%;
 }
-.el-menu-vertical-demo:not(.el-menu--collapse) {
+#app .el-menu-vertical-demo:not(.el-menu--collapse) {
   height: 100%;
-  width: 200px;
+  width: 100%;
   min-height: 400px;
 }
 body,
-.el-header {
+#app .el-header {
   margin: 0;
   padding: 0;
 }
-.logcont {
-  background: #00284d;
-  height: 60px;
-  line-height: 60px;
-  text-align: center;
-  color: #fff;
-  width: 100%;
+#app .logcont{
+    background: #23262E;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+    color: #fff;
+    width: 100%;
+    color: #009688;
+    font-size: 27px;
 }
-.mainCont {
+#app .mainCont {
   background: #dddddd;
   min-height: 500px;
 }
-.el-menu-vertical-demo:not(.el-menu--collapse) {
+#app .el-menu-vertical-demo:not(.el-menu--collapse) {
   min-height: 500px;
   width: 100%;
 }
-.leftslide {
+#app .leftslide {
   height: 60px;
   line-height: 60px;
 }
-.leftslide img {
+#app .leftslide img {
   margin-left: 20px;
   margin-top: 15px;
   width: 32px;
   height: 32px;
 }
-.el-menu--collapse {
+#app .el-menu--collapse {
   min-height: 500px;
 }
-.el-submenu .el-menu-item {
+#app .el-submenu .el-menu-item {
   min-width: auto;
 }
-.el-row {
+#app .el-row {
   height: 100%;
 }
-.el-row > div {
+#app .el-row > div {
   height: 100%;
 }
-.mainContdiv {
-  height: 100%;
+#app .el-row .mainCont1  {
+  height: auto;
 }
-.heaimg {
+#app .heaimg {
   line-height: 60px;
   text-align: center;
 }
-.heaimg img {
+#app .heaimg img {
   vertical-align: middle;
 }
 </style>

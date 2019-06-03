@@ -39,9 +39,9 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   let userInfo=localStorage.getItem('userInfo');
   if(userInfo!=null){
-    console.log(Date.now()-JSON.parse(userInfo).loginTime)
+    console.log(Date.now()-JSON.parse(userInfo).loginTime<=3600*10000)
     if(Date.now()-JSON.parse(userInfo).loginTime<=3600*10000){
-      next({path:to.path=='/login'?'/video-center':null});
+      next({path:to.path=='/login'?'/omp-userlist':null});
     }else {
       localStorage.removeItem('userInfo');
       next({path:to.path=='/login'?null:'/login'});

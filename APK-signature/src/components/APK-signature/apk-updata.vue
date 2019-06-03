@@ -1,11 +1,5 @@
 <template>
   <el-col :span="24" class="mainContdiv">
-    <div class="Breadcrumb">
-      <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item>APK签名录入</el-breadcrumb-item>
-      </el-breadcrumb>
-    </div>
     <el-steps :active="active" simple>
       <el-step title="上传APK" icon="el-icon-upload" @click="toupApk"></el-step>
       <el-step title="等待签名" icon="el-icon-edit"></el-step>
@@ -21,11 +15,11 @@
     >
       <el-col class="upcont" v-show="upapktype">
         <el-form ref="form" :model="form" class="platfroms" label-width="80px">
-          <el-form-item label="活动区域">
+          <el-form-item label="应用平台" style="    width: 64%;">
             <el-select v-model="form.platform" placeholder="请选择平台">
               <el-option label="S8000  " value="1"></el-option>
               <el-option label="V901  " value="2"></el-option>
-              <el-option label="V801  " value="3"></el-option>
+              <el-option label="S801  " value="3"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
@@ -38,6 +32,7 @@
           :on-error="uperror"
           :on-success="upsuccess"
           :data="data"
+          :on-change="upchange"
           :before-upload="beforeupload"
           :on-progress="onprogress	"
         >
@@ -83,8 +78,8 @@ export default {
         platform: 1
       },
       plattime: 0,
-      apkname:0,
-      ApkFile:0
+      apkname: 0,
+      ApkFile: 0
     };
   },
   created() {
@@ -97,18 +92,23 @@ export default {
       this.loading2 = false;
       this.upapktype = 0;
       this.downloadapk = 1;
-      console.log(response);
-      var Timestamp = new Date(
-        response.Data.Timestamp * 1000
-      ).toLocaleString();
-      this.plattime=Timestamp
-      this.apkname=response.Data.ApkName;
-      this.ApkFile=response.Data.File;
-       console.log(this.ApkFile)
+      var Timestamp = new Date(response.Data.Timestamp * 1000).toLocaleString();
+      this.plattime = Timestamp;
+      this.apkname = response.Data.ApkName;
+      this.ApkFile = response.Data.File;
+       // //console.log(this.ApkFile);
     },
-    onprogress() {
-      this.active = 1;
-      this.loading2 = true;
+    onprogress(event, file, fileList) {
+       //console.log(event);
+      if (event.percent == 100) {
+        this.active = 1;
+        this.loading2 = true;
+      }
+    },
+    upchange(e, file, fileList) {
+       //console.log(e);
+      if (e.percentage == 100) {
+      }
     },
     upapkloginfun() {
       this.active = 1;
@@ -121,25 +121,25 @@ export default {
       this.downloadapk = 0;
     },
     uperror(err, file, fileList) {
-       this.active = 0;
+      this.active = 0;
       this.upapktype = 1;
       this.downloadapk = 0;
-      console.log(err);
-      console.log(file);
-      console.log(fileList);
+       //console.log(err);
+       //console.log(file);
+       //console.log(fileList);
       this.$message.error("上传失败，请重试");
     },
-    dunApk(){
-        console.log(this.ApkFile)
-        window.location.href = this.ApkFile;
+    dunApk() {
+       //console.log(this.ApkFile);
+      window.location.href = "http://server_opm.skyworthxr.com" + this.ApkFile;
     },
     beforeupload() {
-      console.log(this.form);
+       // //console.log(this.form);
     }
   }
 };
 </script>
-<style>
+<style >
 .mainContdiv {
   padding: 3%;
   min-height: 400px;
@@ -152,7 +152,7 @@ export default {
   color: #009688;
 }
 .platfroms {
-  width: 23%;
+  width: 39%;
   margin: 10px auto;
 }
 .el-step__title.is-process {
@@ -168,7 +168,7 @@ export default {
   text-align: center;
 }
 .upcont .upload-demo {
-  width: 24%;
+  width: 39%;
   margin: auto;
 }
 .el-loading-mask {

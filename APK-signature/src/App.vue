@@ -3,10 +3,10 @@
     <!--
       导航头部+log
     -->
-    <el-header style="background-color: #23262e;">
+    <el-header style="background-color: #23262e;height:61px;">
       <el-row :span="3">
         <el-col class="logcontMain" :span="3">
-          <el-col class="grid-content bg-purple-dark logcont">SkyworthVr</el-col>
+          <el-col class="grid-content bg-purple-dark logcont">SkyworthVR</el-col>
         </el-col>
         <el-col :span="3"></el-col>
         <el-col :span="4" :push="15">
@@ -45,10 +45,13 @@
           <el-submenu index="1">
             <template slot="title">
               <i class="el-icon-document"></i>
-              <span>APK签名</span>
+              <span>应用管理</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/">APK签名录入</el-menu-item>
+              <el-menu-item index="/">APK签名</el-menu-item>
+            </el-menu-item-group>
+            <el-menu-item-group>
+              <el-menu-item index="/apkhistory">签名历史</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
           
@@ -167,7 +170,7 @@ body,
 .el-menu--collapse {
   min-height: 500px;
 }
-.el-submenu .el-menu-item {
+#app .el-submenu .el-menu-item {
   min-width: auto;
 }
 .el-row {

@@ -56,7 +56,7 @@ module.exports = {
 
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
-    assetsSubDirectory: 'video_cms',
+    assetsSubDirectory: 'OPMcontrol',
     assetsPublicPath: '/',
 
     /**
