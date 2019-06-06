@@ -11,14 +11,14 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/apkfile':{
-        target: 'http://192.168.1.200:8087/',
+        target: 'http://server_opm.skyworthxr.com/',
         changeOrigin: true,
         pathRewrite: {
           '^/apkfile': '/apkfile',
         }
       },
       '/api':{
-        target: 'http://192.168.1.200:8087/',
+        target: 'http://server_opm.skyworthxr.com/',
         changeOrigin: true,
         pathRewrite: {
           '^/api': '/api',

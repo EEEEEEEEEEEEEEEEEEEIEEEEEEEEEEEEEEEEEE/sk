@@ -36,15 +36,16 @@
         </el-form>
         <el-row class="tableCont mainContdiv">
           <el-scrollbar style="height:100%">
-            <el-table :data="tableData" stripe style="width: 110%">
-              <el-table-column prop="UserId" label="用户名称" width="120"></el-table-column>
-              <el-table-column prop="ApkId" label="应用ID " width="70"></el-table-column>
-              <el-table-column prop="ApkName" label="应用名称"></el-table-column>
-              <el-table-column prop="ApkVersion" label="APK版本" width="80"></el-table-column>
-              <el-table-column prop="Platform" label="APK平台" width="80"></el-table-column>
-              <el-table-column prop="SignStatus" label="签名状态" width="80"></el-table-column>
+            <el-table :data="tableData" stripe style="width: 110%" max-height="550">
+              >
+              <el-table-column prop="UserId" label="用户名称" width="180"></el-table-column>
+              <el-table-column prop="ApkId" label="应用ID " width="100"></el-table-column>
+              <el-table-column prop="ApkName" label="应用名称" min-width="200"></el-table-column>
+              <el-table-column prop="ApkVersion" label="APK版本"></el-table-column>
+              <el-table-column prop="Platform" label="APK平台"></el-table-column>
+              <el-table-column prop="statusString" label="签名状态"></el-table-column>
               <el-table-column prop="Timestamp" label="上次变更时间" width="180"></el-table-column>
-              <el-table-column label="Apk下载" width="80">
+              <el-table-column label="Apk下载" width="80" fixed="right">
                 <template slot-scope="scope">
                   <el-button size="primary" @click="handlelink(scope)">下载</el-button>
                 </template>
@@ -91,7 +92,8 @@ export default {
       lengthpage: 1,
       seract: 1,
       seractselect: [],
-      newData: []
+      newData: [],
+      statusString: []
     };
   },
   created() {
@@ -135,10 +137,11 @@ export default {
       this.tableData = list;
     },
     handlelink(value) {
+      console.log(value.row.SignStatus);
       if (value.row.SignStatus !== 0) {
-        var urls = "http://server_opm.skyworthxr.com"+value.row.OriginFile;
+        var urls = "http://server_opm.skyworthxr.com" + value.row.OriginFile;
       } else {
-        var urls = "http://server_opm.skyworthxr.com"+value.row.File;
+        var urls = "http://server_opm.skyworthxr.com" + value.row.File;
       }
       window.location.href = urls;
     },
@@ -164,23 +167,20 @@ export default {
         .then(result => {
           if (result.data.Code !== 0) {
             this.$message.error("错误信息：" + result.data.Message);
-            
             this.lengthpage = 0;
-          } else if(result.data.Code == -4){
-              this.$router.push("/login")
-          }else{
+          } else {
             this.tableData = result.data.Data;
             var solt = this.solt(result.data.Data);
             for (var a = 0; a < this.tableData.length; a++) {
-              this.tableData[a].Timestamp = new Date(
+              this.tableData[a].Timestamp = this.format(
                 this.tableData[a].Timestamp * 1000
-              ).toLocaleString();
+              );
+
               if (this.tableData[a].SignStatus !== 0) {
-                this.tableData[a].SignStatus = "签名失败";
+                this.tableData[a].statusString = "签名失败";
               } else {
-                this.tableData[a].SignStatus = "签名成功";
+                this.tableData[a].statusString = "签名成功";
               }
-              //console.log(this.tableData[a].Platform);
               if (this.tableData[a].Platform == 1) {
                 this.tableData[a].Platform = "S8000";
               } else if (this.tableData[a].Platform == 2) {
@@ -192,12 +192,37 @@ export default {
             this.newData = this.tableData;
             this.tablelist = this.tableData;
             this.total = this.tablelist.length;
-            //console.log(this.total)
             this.lengthpage = 1;
             this.page(this.tablelist);
           }
         })
         .catch(err => {});
+    },
+    add0(m) {
+      return m < 10 ? "0" + m : m;
+    },
+    format(shijianchuo) {
+      //shijianchuo是整数，否则要parseInt转换
+      var time = new Date(shijianchuo);
+      var y = time.getFullYear();
+      var m = time.getMonth() + 1;
+      var d = time.getDate();
+      var h = time.getHours();
+      var mm = time.getMinutes();
+      var s = time.getSeconds();
+      return (
+        y +
+        "-" +
+        this.add0(m) +
+        "-" +
+        this.add0(d) +
+        " " +
+        this.add0(h) +
+        ":" +
+        this.add0(mm) +
+        ":" +
+        this.add0(s)
+      );
     },
     resetForm() {
       this.form.nameid = "";

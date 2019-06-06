@@ -142,16 +142,18 @@ export default {
       this.axios
         .get("/api/opm/apksignrecord/list")
         .then(res => {
-          if (result.data.Code !== 0) {
+          if (res.data.Code !== 0) {
             this.$message.error("错误信息：" + result.data.Message);
             this.lengthpage = 0;
           } else {
+            console.log(res);
             var data = res.data.Data;
             for (var a = 0; a < data.length; a++) {
-              if (data[a].UserId == value.row.Id) {
-                data[a].Timestamp = new Date(
-                  data[a].Timestamp * 1000
-                ).toLocaleString();
+              if (data[a].UserId == value.row.UserName) {
+                // data[a].Timestamp = new Date(
+                //   data[a].Timestamp * 1000
+                // ).toLocaleString();
+                data[a].Timestamp = this.format(data[a].Timestamp * 1000);
                 data[a].info = "请求签名";
                 list.push(data[a]);
               }
@@ -167,6 +169,32 @@ export default {
           console.error(err);
         });
     },
+    add0(m) {
+      return m < 10 ? "0" + m : m;
+    },
+    format(shijianchuo) {
+      //shijianchuo是整数，否则要parseInt转换
+      var time = new Date(shijianchuo);
+      var y = time.getFullYear();
+      var m = time.getMonth() + 1;
+      var d = time.getDate();
+      var h = time.getHours();
+      var mm = time.getMinutes();
+      var s = time.getSeconds();
+      return (
+        y +
+        "-" +
+        this.add0(m) +
+        "-" +
+        this.add0(d) +
+        " " +
+        this.add0(h) +
+        ":" +
+        this.add0(mm) +
+        ":" +
+        this.add0(s)
+      );
+    },
     getlist() {
       this.axios({
         url: "/api/opm/user/list"
@@ -177,9 +205,12 @@ export default {
           } else {
             this.tableData = result.data.Data;
             for (var a = 0; a < this.tableData.length; a++) {
-              this.tableData[a].RegisterTimestamp = new Date(
+              // this.tableData[a].RegisterTimestamp = new Date(
+              //   this.tableData[a].RegisterTimestamp * 1000
+              // ).toLocaleString();
+              this.tableData[a].RegisterTimestamp = this.format(
                 this.tableData[a].RegisterTimestamp * 1000
-              ).toLocaleString();
+              );
               //console.log(this.tableData[a].Platform);
               if (this.tableData[a].Platform == 1) {
                 this.tableData[a].Platform = "S8000";
@@ -228,10 +259,10 @@ export default {
           headers: { "Content-Type": "application/x-www-form-urlencoded" }
         })
         .then(res => {
-          if (result.data.Code !== 0) {
-            this.$message.error("错误信息：" + result.data.Message);
-          } else if (result.data.Code == -4) {
-            this.$router.push("/login");
+          if (res.data.Code == -4) {
+            this.$message.error("错误信息：权限不足" + res.data.Message);
+          } else if (res.data.Code !== 0) {
+            this.$message.error("错误信息：" + res.data.Message);
           } else {
             this.dialogVisible = false;
             this.$message({
